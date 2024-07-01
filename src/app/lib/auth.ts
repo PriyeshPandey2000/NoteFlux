@@ -1,12 +1,48 @@
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
+import Notion from "@auth/core/providers/notion"
+
+
+
 import bcrypt from "bcryptjs";
 import User from "../../models/User";
 import connect from "../../utils/db";
 
 export const NEXT_AUTH={
     providers: [
+      Notion({
+        clientId: process.env.NOTION_CLIENT_ID,
+        clientSecret: process.env.NOTION_CLIENT_SECRET,
+        redirectUri:
+          "https://note-flux.vercel.app",
+      }),
+      CredentialsProvider({
+        id: "credentials",
+        name: "Credentials",
+        credentials: {
+          email: { label: "Email", type: "text" },
+          password: { label: "Password", type: "password" },
+        },
+        async authorize(credentials) {
+          await connect();
+          try {
+            const user = await User.findOne({ email: credentials.email });
+            if (user) {
+              const isPasswordCorrect = await bcrypt.compare(
+                credentials.password,
+                user.password
+              );
+              if (isPasswordCorrect) {
+                return user;
+              }
+            }
+            return null;
+          } catch (err) {
+            throw new Error(err);
+          }
+        },
+      }),
       CredentialsProvider({
         id: "credentials",
         name: "Credentials",

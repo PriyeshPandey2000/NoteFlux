@@ -91,7 +91,36 @@ export default function VoiceText() {
       alert('Failed to save transcript.');
     }
   };
-  
+
+  const handleSaveToNotion = async () => {
+    if (!session) {
+      alert('You must be logged in to save the transcript to Notion');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/saveNotion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ transcript })
+      });
+
+      if (response.ok) {
+        alert('Transcript saved to Notion successfully!');
+        setTranscript('');
+        setRecordingComplete(false);
+      } else {
+        const errorData = await response.json();
+        console.error('Error saving transcript to Notion:', errorData);
+        alert('Failed to save transcript to Notion: ' + errorData.message);
+      }
+    } catch (error) {
+      console.error('Error saving transcript to Notion:', error);
+      alert('Failed to save transcript to Notion.');
+    }
+  };
 
   return (
     <div className="flex items-center justify-center w-full">
@@ -124,7 +153,7 @@ export default function VoiceText() {
           {isRecording ? (
             <button
               onClick={handleToggleRecording}
-              className="mt-10 m-auto flex items-center justify-center bg-[#dafa53] hover:bg-red-500 rounded-full w-20 h-20 focus:outline-none"
+              className="mt-10 m-auto flex items-center justify-center bg-red-400 hover:bg-red-500 rounded-full w-20 h-20 focus:outline-none"
             >
               <svg
                 className="h-12 w-12"
@@ -137,7 +166,7 @@ export default function VoiceText() {
           ) : (
             <button
               onClick={handleToggleRecording}
-              className="mt-10 m-auto flex items-center justify-center bg-[#dafa53] hover:bg-orange-400 rounded-full w-20 h-20 focus:outline-none"
+              className="mt-10 m-auto flex items-center justify-center bg-[#dafa53] hover:bg-blue-500 rounded-full w-20 h-20 focus:outline-none"
             >
               <svg
                 viewBox="0 0 256 256"
@@ -153,14 +182,20 @@ export default function VoiceText() {
           )}
         </div>
         {recordingComplete && (
-           <div className="flex justify-center mt-4">
-          <button
-            onClick={handleSaveTranscript}
-            className="mt-4 mx-auto bg-sky-300 text-black p-2 rounded text-sm "
-          >
-            Save Transcript
-          </button>
-          </div>
+          <>
+            <button
+              onClick={handleSaveTranscript}
+              className="mt-4 bg-blue-500 text-white p-2 rounded"
+            >
+              Save Transcript
+            </button>
+            <button
+              onClick={handleSaveToNotion}
+              className="mt-4 bg-green-500 text-white p-2 rounded"
+            >
+              Save to Notion
+            </button>
+          </>
         )}
       </div>
     </div>

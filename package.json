@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth/core": "^0.34.1",
+    "@notionhq/client": "^2.2.15",
     "@types/dom-speech-recognition": "^0.0.4",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
