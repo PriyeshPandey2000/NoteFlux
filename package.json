@@ -21,6 +21,7 @@
     "@fullcalendar/resource-timeline": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
     "@types/dom-speech-recognition": "^0.0.4",
+    "@uploadthing/react": "^6.7.2",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
     "fullcalendar": "^6.1.15",
@@ -35,7 +36,8 @@
     "react-quill": "^2.0.0",
     "react-speech-recognition": "^3.10.0",
     "react-spinners": "^0.14.1",
-    "react-use-clipboard": "^1.0.9"
+    "react-use-clipboard": "^1.0.9",
+    "uploadthing": "^6.13.2"
   },
   "devDependencies": {
     "@types/node": "20.14.2",
