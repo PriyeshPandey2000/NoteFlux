@@ -2,15 +2,14 @@ import Hero from "@/components/hero";
 import ConnectSupabaseSteps from "@/components/tutorial/connect-supabase-steps";
 import SignUpUserSteps from "@/components/tutorial/sign-up-user-steps";
 import { hasEnvVars } from "@/utils/supabase/check-env-vars";
+import VoiceChat from "@/components/voice-assistant/voice-chat";
 
 export default async function Home() {
   return (
-    <>
-      <Hero />
-      <main className="flex-1 flex flex-col gap-6 px-4">
-        <h2 className="font-medium text-xl mb-4">Next steps</h2>
-        {hasEnvVars ? <SignUpUserSteps /> : <ConnectSupabaseSteps />}
-      </main>
-    </>
+    <div className="min-h-screen w-full flex items-center justify-center">
+      <div className="floating-container relative min-h-[500px] w-full max-w-2xl">
+        <VoiceChat />
+      </div>
+    </div>
   );
 }
