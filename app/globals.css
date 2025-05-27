@@ -67,3 +67,184 @@
     @apply bg-background text-foreground;
   }
 }
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  /* Commenting out gradient background for a solid color */
+  /*
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  */
+  background: rgb(0, 0, 0); /* Solid black background */
+}
+
+/* Voice Assistant Styles */
+.mic-button-pro {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #1e293b, #0f172a);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mic-button-pro:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+.mic-button-pro.active {
+  background: linear-gradient(145deg, #ef4444, #dc2626);
+}
+
+.pulse-ring {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  position: relative;
+}
+
+.pulse-ring::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #22c55e;
+  opacity: 0.7;
+  animation: pulse 1.5s ease-out infinite;
+}
+
+.pulse-subtle {
+  position: relative;
+}
+
+.pulse-subtle::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #22c55e;
+  opacity: 0.7;
+  animation: pulse 2s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.audio-bar {
+  animation: sound 1.5s ease-out infinite;
+}
+
+@keyframes sound {
+  0% {
+    height: 3px;
+  }
+  50% {
+    height: 15px;
+  }
+  100% {
+    height: 3px;
+  }
+}
+
+.neo-blur {
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.text-gradient {
+  /* Commenting out gradient text */
+  /*
+  background: linear-gradient(90deg, #22c55e, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  */
+  color: #10b981; /* Solid color instead of gradient */
+}
+
+.thinking-dots {
+  display: flex;
+  align-items: center;
+}
+
+.thinking-dots span {
+  width: 4px;
+  height: 4px;
+  margin: 0 2px;
+  background-color: #6b7280;
+  border-radius: 50%;
+  display: inline-block;
+  animation: dots 1.5s infinite ease-in-out;
+}
+
+.thinking-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.thinking-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes dots {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* Add floating animation for the voice recorder */
+.floating-container {
+  animation: floating 6s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
