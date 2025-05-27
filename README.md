@@ -1,23 +1,22 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
+
+  <h1 align="center">NoteFlux</h1>
 </a>
 
 <p align="center">
- The fastest way to build apps with Next.js and Supabase
+ Open source voice to text conversion for faster typing .
 </p>
 
 <p align="center">
   <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
+  <a href="#demo"><strong>Speech to text </strong></a> ·
+  <a href="#deploy-to-vercel"><strong>Choose diiffernt models depending on the use case</strong></a> ·
   <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
   <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
+  
 </p>
 <br/>
 
-## Features
+<!-- ## Features
 
 - Works across the entire [Next.js](https://nextjs.org) stack
   - App Router
@@ -101,4 +100,4 @@ Please file feedback and issues over on the [Supabase GitHub org](https://github
 
 - [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
 - [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs) -->
