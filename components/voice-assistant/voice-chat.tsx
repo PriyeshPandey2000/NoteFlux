@@ -22,8 +22,7 @@ const VoiceChat = () => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [isThinking, setIsThinking] = useState(false);
-  const [finalTranscript, setFinalTranscript] = useState<string[]>([]);
-  const [modelResponses, setModelResponses] = useState<string[]>([]);
+  const [accumulatedTranscript, setAccumulatedTranscript] = useState<string>("");
   const [selectedModel, setSelectedModel] = useState<LLMModel>('gpt-4o-mini');
   const [selectedVoiceAgent, setSelectedVoiceAgent] = useState<VoiceAgent>('webspeech');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -74,8 +73,10 @@ const VoiceChat = () => {
               setTranscript("");
               const newTranscript = transcriptText.trim();
               if (newTranscript) {
-                setFinalTranscript(prev => [...prev, newTranscript]);
-                processTranscriptWithLLM(newTranscript);
+                setAccumulatedTranscript(prev => {
+                  const separator = prev ? " " : "";
+                  return prev + separator + newTranscript;
+                });
               }
             } else {
               setTranscript(transcriptText);
@@ -128,10 +129,10 @@ const VoiceChat = () => {
             if (result.isFinal) {
               setTranscript("");
               const newTranscript = result[0].transcript.trim();
-              setFinalTranscript(prev => [...prev, newTranscript]);
-              
-              // Process the transcript with the selected LLM
-              processTranscriptWithLLM(newTranscript);
+              setAccumulatedTranscript(prev => {
+                const separator = prev ? " " : "";
+                return prev + separator + newTranscript;
+              });
             } else {
               interimTranscript += result[0].transcript;
             }
@@ -214,61 +215,8 @@ const VoiceChat = () => {
     };
   }, []);
   
-  // Function to process transcript with OpenAI API
-  const processTranscriptWithLLM = async (text: string) => {
-    setIsProcessing(true);
-    
-    try {
-      // Check if API key is available
-      if (!openaiApiKey) {
-        throw new Error('OpenAI API key not configured. Please add NEXT_PUBLIC_OPENAI_API_KEY to your environment variables.');
-      }
-
-      // Make an API call to OpenAI
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${openaiApiKey}`
-        },
-        body: JSON.stringify({
-          model: selectedModel,
-          messages: [
-            {
-              role: "system",
-              content: "You are a helpful voice assistant. Keep your answers brief and conversational."
-            },
-            {
-              role: "user",
-              content: text
-            }
-          ],
-          max_tokens: 150
-        })
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('OpenAI API error:', errorData);
-        throw new Error(`API error: ${errorData.error?.message || 'Unknown error'}`);
-      }
-      
-      const data = await response.json();
-      const aiResponse = data.choices[0].message.content;
-      
-      setModelResponses(prev => [...prev, aiResponse]);
-    } catch (error) {
-      console.error('Error processing with OpenAI:', error);
-      toast("Error processing your request with OpenAI. Please try again.");
-      setModelResponses(prev => [...prev, "Sorry, I encountered an error processing your request."]);
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-  
   const clearTranscript = () => {
-    setFinalTranscript([]);
-    setModelResponses([]);
+    setAccumulatedTranscript("");
   };
   
   const handleModelChange = (model: LLMModel) => {
@@ -294,11 +242,11 @@ const VoiceChat = () => {
   
   return (
     <div className="fixed inset-x-0 bottom-16 flex justify-center z-50">
-      <div className="neo-blur rounded-xl border border-gray-700/50 shadow-xl max-w-2xl w-full mx-4 transition-all duration-300 ease-in-out overflow-hidden">
+      <div className="neo-blur rounded-xl border border-green-500 shadow-xl max-w-2xl w-full mx-4 transition-all duration-300 ease-in-out overflow-hidden color-changing-border">
         <div className="flex flex-col">
           {/* Header with selectors */}
           <div className="flex items-center justify-between p-4 border-b border-gray-700/30">
-            <h3 className="text-sm font-medium text-gray-300">Voice Assistant</h3>
+            <h3 className="text-sm text-bold font-medium text-gray-300">Noteflux</h3>
             <div className="flex items-center gap-3">
               <VoiceAgentSelector 
                 selectedAgent={selectedVoiceAgent}
@@ -366,12 +314,10 @@ const VoiceChat = () => {
             {/* Transcript component - positioned below mic */}
             <VoiceTranscript 
               transcript={transcript} 
-              finalTranscript={finalTranscript} 
+              accumulatedTranscript={accumulatedTranscript}
               isThinking={isThinking} 
               onClear={clearTranscript}
               show={true}
-              modelResponses={modelResponses}
-              isProcessing={isProcessing}
               selectedModel={selectedModel}
               selectedVoiceAgent={selectedVoiceAgent}
             />

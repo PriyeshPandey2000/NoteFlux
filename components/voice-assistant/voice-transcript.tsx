@@ -6,24 +6,20 @@ import { VoiceAgent } from './voice-agent-selector';
 
 type VoiceTranscriptProps = {
   transcript: string;
-  finalTranscript: string[];
+  accumulatedTranscript: string;
   isThinking: boolean;
   onClear: () => void;
   show: boolean;
-  modelResponses?: string[];
-  isProcessing?: boolean;
   selectedModel?: LLMModel;
   selectedVoiceAgent?: VoiceAgent;
 };
 
 const VoiceTranscript = ({ 
   transcript, 
-  finalTranscript, 
+  accumulatedTranscript,
   isThinking, 
   onClear, 
   show,
-  modelResponses = [],
-  isProcessing = false,
   selectedModel = 'gpt-4o-mini',
   selectedVoiceAgent = 'webspeech'
 }: VoiceTranscriptProps) => {
@@ -34,16 +30,16 @@ const VoiceTranscript = ({
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
-  }, [transcript, finalTranscript, modelResponses]);
+  }, [transcript, accumulatedTranscript]);
   
   return (
     <div className="mb-2">
       {/* Header with clear button */}
-      {(finalTranscript.length > 0 || modelResponses.length > 0) && (
+      {accumulatedTranscript && (
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center">
             <div className={`w-2 h-2 rounded-full mr-2 pulse-subtle ${selectedVoiceAgent === 'deepgram' ? 'bg-blue-500' : 'bg-green-500'}`}></div>
-            <h3 className="text-sm font-medium text-gray-300">Conversation</h3>
+            <h3 className="text-sm font-medium text-gray-300">Transcript</h3>
           </div>
           <button 
             onClick={onClear}
@@ -57,74 +53,31 @@ const VoiceTranscript = ({
       {/* Transcript content */}
       <div 
         ref={containerRef}
-        className="min-h-[200px] max-h-[300px] overflow-y-auto rounded-lg bg-gray-800/50 p-4 border border-gray-700/30"
+        className="min-h-[200px] max-h-[300px] overflow-y-auto rounded-lg p-4"
         style={{ scrollBehavior: 'smooth' }}
       >
-        {/* Conversation thread displaying user inputs and AI responses */}
-        {finalTranscript.map((text, index) => (
-          <React.Fragment key={index}>
-            {/* User message */}
-            <div className="mb-3">
-              <div className="flex items-start gap-2">
-                <div className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-xs">
-                  U
-                </div>
-                <div className="flex-1 p-3 rounded-lg bg-gray-700/30 text-gray-200">
-                  <p>{text}</p>
-                  <div className="text-xs text-gray-500 mt-1">
-                    via {selectedVoiceAgent === 'deepgram' ? 'Deepgram Nova 2' : 'WebSpeech'}
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* AI response */}
-            {modelResponses[index] && (
-              <div className="mb-3 ml-6">
-                <div className="flex items-start gap-2">
-                  <div className="w-6 h-6 rounded-full bg-green-600/30 flex items-center justify-center text-xs">
-                    AI
-                  </div>
-                  <div className="flex-1 p-3 rounded-lg bg-gray-700/20 text-gray-300">
-                    <p>{modelResponses[index]}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </React.Fragment>
-        ))}
-        
-        {/* Current interim transcript */}
-        {transcript && (
-          <div className="ml-8 text-gray-400 italic">
-            {transcript}
-            <div className="text-xs text-gray-500 mt-1">
-              via {selectedVoiceAgent === 'deepgram' ? 'Deepgram Nova 2' : 'WebSpeech'}
-            </div>
+        {/* Accumulated transcript display */}
+        {accumulatedTranscript && (
+          <div className="mb-3">
+            <p className="text-sm text-gray-300 whitespace-pre-wrap">{accumulatedTranscript}</p>
+            {/* <div className="text-xs text-gray-500 mt-2">
+              Transcribed via {selectedVoiceAgent === 'deepgram' ? 'Deepgram Nova 2' : 'WebSpeech API'}
+            </div> */}
           </div>
         )}
         
-        {/* Processing indicator after last message */}
-        {isProcessing && (
-          <div className="ml-6 mb-3">
-            <div className="flex items-start gap-2">
-              <div className="w-6 h-6 rounded-full bg-green-600/30 flex items-center justify-center text-xs">
-                AI
-              </div>
-              <div className="flex items-center space-x-2 p-3">
-                <div className="thinking-dots">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <span className="text-gray-500 text-sm">{selectedModel} is thinking...</span>
-              </div>
-            </div>
+        {/* Current interim transcript */}
+        {transcript && (
+          <div className="text-sm text-gray-400 italic">
+            {transcript}
+            {/* <div className="text-xs text-gray-500 mt-1">
+              via {selectedVoiceAgent === 'deepgram' ? 'Deepgram Nova 2' : 'WebSpeech'}
+            </div> */}
           </div>
         )}
         
         {/* Thinking indicator */}
-        {isThinking && !isProcessing && (
+        {isThinking && (
           <div className="flex items-center space-x-2 mt-2">
             <div className="thinking-dots">
               <span></span>
@@ -136,10 +89,10 @@ const VoiceTranscript = ({
         )}
         
         {/* Empty state */}
-        {!transcript && finalTranscript.length === 0 && !isThinking && !isProcessing && (
+        {!transcript && !accumulatedTranscript && !isThinking && (
           <div className="h-full flex items-center justify-center">
             <p className="text-gray-500 text-center py-2">
-              Speak to start a conversation with {selectedModel}
+              Speak to start transcribing
               <br />
               <span className="text-xs">
                 Using {selectedVoiceAgent === 'deepgram' ? 'Deepgram Nova 2' : 'WebSpeech API'} for transcription
