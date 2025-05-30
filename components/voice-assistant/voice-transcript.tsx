@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect } from 'react';
 import { LLMModel } from './voice-chat';
+import { VoiceAgent } from './voice-agent-selector';
 
 type VoiceTranscriptProps = {
   transcript: string;
@@ -12,6 +13,7 @@ type VoiceTranscriptProps = {
   modelResponses?: string[];
   isProcessing?: boolean;
   selectedModel?: LLMModel;
+  selectedVoiceAgent?: VoiceAgent;
 };
 
 const VoiceTranscript = ({ 
@@ -22,7 +24,8 @@ const VoiceTranscript = ({
   show,
   modelResponses = [],
   isProcessing = false,
-  selectedModel = 'gpt-4o-mini'
+  selectedModel = 'gpt-4o-mini',
+  selectedVoiceAgent = 'webspeech'
 }: VoiceTranscriptProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -39,7 +42,7 @@ const VoiceTranscript = ({
       {(finalTranscript.length > 0 || modelResponses.length > 0) && (
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center">
-            <div className="w-2 h-2 bg-green-500 rounded-full mr-2 pulse-subtle"></div>
+            <div className={`w-2 h-2 rounded-full mr-2 pulse-subtle ${selectedVoiceAgent === 'deepgram' ? 'bg-blue-500' : 'bg-green-500'}`}></div>
             <h3 className="text-sm font-medium text-gray-300">Conversation</h3>
           </div>
           <button 
@@ -68,6 +71,9 @@ const VoiceTranscript = ({
                 </div>
                 <div className="flex-1 p-3 rounded-lg bg-gray-700/30 text-gray-200">
                   <p>{text}</p>
+                  <div className="text-xs text-gray-500 mt-1">
+                    via {selectedVoiceAgent === 'deepgram' ? 'Deepgram Nova 2' : 'WebSpeech'}
+                  </div>
                 </div>
               </div>
             </div>
@@ -92,6 +98,9 @@ const VoiceTranscript = ({
         {transcript && (
           <div className="ml-8 text-gray-400 italic">
             {transcript}
+            <div className="text-xs text-gray-500 mt-1">
+              via {selectedVoiceAgent === 'deepgram' ? 'Deepgram Nova 2' : 'WebSpeech'}
+            </div>
           </div>
         )}
         
@@ -131,6 +140,10 @@ const VoiceTranscript = ({
           <div className="h-full flex items-center justify-center">
             <p className="text-gray-500 text-center py-2">
               Speak to start a conversation with {selectedModel}
+              <br />
+              <span className="text-xs">
+                Using {selectedVoiceAgent === 'deepgram' ? 'Deepgram Nova 2' : 'WebSpeech API'} for transcription
+              </span>
             </p>
           </div>
         )}

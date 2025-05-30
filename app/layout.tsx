@@ -10,8 +10,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Voice AI Assistant",
-  description: "Talk to AI using your voice",
+  title: "Noteflux",
+  description: "Type more using your voice",
 };
 
 const geistSans = Geist({

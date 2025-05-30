@@ -5,6 +5,8 @@ import { Mic, MicOff } from 'lucide-react';
 import { toast } from 'sonner';
 import VoiceTranscript from './voice-transcript';
 import ModelSelector from './model-selector';
+import VoiceAgentSelector, { VoiceAgent } from './voice-agent-selector';
+import { DeepgramService } from '@/lib/deepgram-service';
 
 // Type declarations for the Web Speech API
 declare global {
@@ -23,18 +25,85 @@ const VoiceChat = () => {
   const [finalTranscript, setFinalTranscript] = useState<string[]>([]);
   const [modelResponses, setModelResponses] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState<LLMModel>('gpt-4o-mini');
+  const [selectedVoiceAgent, setSelectedVoiceAgent] = useState<VoiceAgent>('webspeech');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSpeechSupported, setIsSpeechSupported] = useState(true);
   const recognitionRef = useRef<any>(null);
+  const deepgramServiceRef = useRef<DeepgramService | null>(null);
   const timeoutRef = useRef<number | null>(null);
   
-  // OpenAI API key from environment variables
-  const apiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+  // API keys from environment variables
+  const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+  const deepgramApiKey = process.env.NEXT_PUBLIC_DEEPGRAM_API_KEY;
   
   // Toggle listening state
-  const toggleListening = () => {
+  const toggleListening = async () => {
     if (typeof window === 'undefined') return;
     
+    if (selectedVoiceAgent === 'deepgram') {
+      await toggleDeepgramListening();
+    } else {
+      toggleWebSpeechListening();
+    }
+  };
+
+  // Deepgram listening logic
+  const toggleDeepgramListening = async () => {
+    try {
+      if (!deepgramApiKey) {
+        toast("Deepgram API key not configured. Please add NEXT_PUBLIC_DEEPGRAM_API_KEY to your environment variables.");
+        return;
+      }
+
+      if (isListening) {
+        // Stop listening
+        if (deepgramServiceRef.current) {
+          deepgramServiceRef.current.stopListening();
+        }
+        setIsListening(false);
+        setIsThinking(true);
+      } else {
+        // Start listening
+        if (!deepgramServiceRef.current) {
+          deepgramServiceRef.current = new DeepgramService(deepgramApiKey);
+        }
+
+        await deepgramServiceRef.current.startListening(
+          (transcriptText: string, isFinal: boolean) => {
+            if (isFinal) {
+              setTranscript("");
+              const newTranscript = transcriptText.trim();
+              if (newTranscript) {
+                setFinalTranscript(prev => [...prev, newTranscript]);
+                processTranscriptWithLLM(newTranscript);
+              }
+            } else {
+              setTranscript(transcriptText);
+            }
+          },
+          (error: any) => {
+            console.error('Deepgram error:', error);
+            setIsListening(false);
+            toast("Error with Deepgram transcription. Please try again.");
+          },
+          () => {
+            setIsListening(true);
+            toast("Listening with Deepgram Nova 2...");
+          },
+          () => {
+            setIsListening(false);
+            setIsThinking(false);
+          }
+        );
+      }
+    } catch (error) {
+      console.error("Error with Deepgram:", error);
+      toast("Failed to start Deepgram transcription. Please check your API key.");
+    }
+  };
+
+  // WebSpeech listening logic (existing)
+  const toggleWebSpeechListening = () => {
     // Initialize speech recognition on first click if not already initialized
     if (!recognitionRef.current) {
       try {
@@ -118,7 +187,7 @@ const VoiceChat = () => {
         recognitionRef.current.start();
         setTranscript("");
         setIsListening(true);
-        toast("Listening...");
+        toast("Listening with WebSpeech...");
       }
     } catch (error) {
       console.error("Error toggling speech recognition:", error);
@@ -136,6 +205,9 @@ const VoiceChat = () => {
           console.error("Error aborting speech recognition:", e);
         }
       }
+      if (deepgramServiceRef.current) {
+        deepgramServiceRef.current.stopListening();
+      }
       if (timeoutRef.current) {
         window.clearTimeout(timeoutRef.current);
       }
@@ -148,7 +220,7 @@ const VoiceChat = () => {
     
     try {
       // Check if API key is available
-      if (!apiKey) {
+      if (!openaiApiKey) {
         throw new Error('OpenAI API key not configured. Please add NEXT_PUBLIC_OPENAI_API_KEY to your environment variables.');
       }
 
@@ -157,7 +229,7 @@ const VoiceChat = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`
+          'Authorization': `Bearer ${openaiApiKey}`
         },
         body: JSON.stringify({
           model: selectedModel,
@@ -203,18 +275,40 @@ const VoiceChat = () => {
     setSelectedModel(model);
     toast(`Switched to ${model} model`);
   };
+
+  const handleVoiceAgentChange = (agent: VoiceAgent) => {
+    // Stop current listening if active
+    if (isListening) {
+      if (selectedVoiceAgent === 'deepgram' && deepgramServiceRef.current) {
+        deepgramServiceRef.current.stopListening();
+      } else if (selectedVoiceAgent === 'webspeech' && recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      setIsListening(false);
+      setIsThinking(false);
+    }
+
+    setSelectedVoiceAgent(agent);
+    toast(`Switched to ${agent === 'deepgram' ? 'Deepgram Nova 2' : 'WebSpeech API'}`);
+  };
   
   return (
     <div className="fixed inset-x-0 bottom-16 flex justify-center z-50">
       <div className="neo-blur rounded-xl border border-gray-700/50 shadow-xl max-w-2xl w-full mx-4 transition-all duration-300 ease-in-out overflow-hidden">
         <div className="flex flex-col">
-          {/* Header with model selector */}
+          {/* Header with selectors */}
           <div className="flex items-center justify-between p-4 border-b border-gray-700/30">
             <h3 className="text-sm font-medium text-gray-300">Voice Assistant</h3>
-            <ModelSelector 
-              selectedModel={selectedModel}
-              onModelChange={handleModelChange}
-            />
+            <div className="flex items-center gap-3">
+              <VoiceAgentSelector 
+                selectedAgent={selectedVoiceAgent}
+                onAgentChange={handleVoiceAgentChange}
+              />
+              <ModelSelector 
+                selectedModel={selectedModel}
+                onModelChange={handleModelChange}
+              />
+            </div>
           </div>
           
           {/* Main content area */}
@@ -241,14 +335,14 @@ const VoiceChat = () => {
                 {isListening ? (
                   <div className="flex items-center">
                     <div className="pulse-ring mr-2"></div>
-                    <span>Listening...</span>
+                    <span>Listening with {selectedVoiceAgent === 'deepgram' ? 'Deepgram Nova 2' : 'WebSpeech'}...</span>
                   </div>
                 ) : isThinking ? (
                   <div className="flex items-center">
                     <span>Processing your input...</span>
                   </div>
                 ) : (
-                  <span>Click to start recording</span>
+                  <span>Click to start recording with {selectedVoiceAgent === 'deepgram' ? 'Deepgram Nova 2' : 'WebSpeech'}</span>
                 )}
               </div>
               
@@ -258,7 +352,7 @@ const VoiceChat = () => {
                   {[...Array(16)].map((_, i) => (
                     <div 
                       key={i} 
-                      className="bg-green-500/70 w-1.5 rounded-full audio-bar"
+                      className={`w-1.5 rounded-full audio-bar ${selectedVoiceAgent === 'deepgram' ? 'bg-blue-500/70' : 'bg-green-500/70'}`}
                       style={{ 
                         animationDelay: `${i * 0.05}s`,
                         height: `${Math.random() * 30 + 3}px`
@@ -279,6 +373,7 @@ const VoiceChat = () => {
               modelResponses={modelResponses}
               isProcessing={isProcessing}
               selectedModel={selectedModel}
+              selectedVoiceAgent={selectedVoiceAgent}
             />
           </div>
         </div>
