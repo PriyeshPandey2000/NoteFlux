@@ -248,3 +248,46 @@ body {
     transform: translateY(0px);
   }
 }
+
+/* Grid background pattern */
+.grid-background {
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: 0 0, 0 0;
+  animation: grid-move 20s linear infinite;
+}
+
+@keyframes grid-move {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(50px, 50px);
+  }
+}
+
+/* Color-changing border animation */
+.color-changing-border {
+  animation: border-color-cycle 12s ease-in-out infinite;
+  transition: border-color 0.5s ease-in-out;
+}
+
+@keyframes border-color-cycle {
+  0% {
+    border-color: #22c55e; /* Light green */
+  }
+  25% {
+    border-color: #16a34a; /* Dark green */
+  }
+  50% {
+    border-color: #a855f7; /* Purple */
+  }
+  75% {
+    border-color: #7c3aed; /* Dark purple */
+  }
+  100% {
+    border-color: #22c55e; /* Back to light green */
+  }
+}
