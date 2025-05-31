@@ -1,14 +1,17 @@
 "use client";
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { LLMModel } from './voice-chat';
 import { VoiceAgent } from './voice-agent-selector';
+import { Save } from 'lucide-react';
+import { toast } from 'sonner';
 
 type VoiceTranscriptProps = {
   transcript: string;
   accumulatedTranscript: string;
   isThinking: boolean;
   onClear: () => void;
+  onSave?: (transcript: string, voiceAgent: VoiceAgent, model: LLMModel) => Promise<void>;
   show: boolean;
   selectedModel?: LLMModel;
   selectedVoiceAgent?: VoiceAgent;
@@ -18,12 +21,14 @@ const VoiceTranscript = ({
   transcript, 
   accumulatedTranscript,
   isThinking, 
-  onClear, 
+  onClear,
+  onSave,
   show,
   selectedModel = 'gpt-4o-mini',
   selectedVoiceAgent = 'webspeech'
 }: VoiceTranscriptProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isSaving, setIsSaving] = useState(false);
   
   // Auto-scroll to bottom when transcript updates
   useEffect(() => {
@@ -31,22 +36,49 @@ const VoiceTranscript = ({
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }, [transcript, accumulatedTranscript]);
+
+  const handleSave = async () => {
+    if (!accumulatedTranscript.trim() || !onSave) return;
+    
+    setIsSaving(true);
+    try {
+      await onSave(accumulatedTranscript, selectedVoiceAgent, selectedModel);
+      toast.success('Transcript saved successfully!');
+    } catch (error) {
+      console.error('Error saving transcript:', error);
+      toast.error('Failed to save transcript. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
   
   return (
     <div className="mb-2">
-      {/* Header with clear button */}
+      {/* Header with clear and save buttons */}
       {accumulatedTranscript && (
         <div className="flex justify-between items-center mb-3">
           <div className="flex items-center">
             <div className={`w-2 h-2 rounded-full mr-2 pulse-subtle ${selectedVoiceAgent === 'deepgram' ? 'bg-blue-500' : 'bg-green-500'}`}></div>
             <h3 className="text-sm font-medium text-gray-300">Transcript</h3>
           </div>
-          <button 
-            onClick={onClear}
-            className="text-xs text-gray-400 hover:text-white transition-colors"
-          >
-            Clear
-          </button>
+          <div className="flex items-center gap-2">
+            {onSave && (
+              <button 
+                onClick={handleSave}
+                disabled={isSaving || !accumulatedTranscript.trim()}
+                className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <Save className="h-3 w-3" />
+                {isSaving ? 'Saving...' : 'Save'}
+              </button>
+            )}
+            <button 
+              onClick={onClear}
+              className="text-xs text-gray-400 hover:text-white transition-colors"
+            >
+              Clear
+            </button>
+          </div>
         </div>
       )}
       

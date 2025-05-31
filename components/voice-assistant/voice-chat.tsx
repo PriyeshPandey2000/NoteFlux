@@ -7,6 +7,7 @@ import VoiceTranscript from './voice-transcript';
 import ModelSelector from './model-selector';
 import VoiceAgentSelector, { VoiceAgent } from './voice-agent-selector';
 import { DeepgramService } from '@/lib/deepgram-service';
+import { TranscriptService } from '@/lib/services/transcript-service';
 
 // Type declarations for the Web Speech API
 declare global {
@@ -30,6 +31,7 @@ const VoiceChat = () => {
   const recognitionRef = useRef<any>(null);
   const deepgramServiceRef = useRef<DeepgramService | null>(null);
   const timeoutRef = useRef<number | null>(null);
+  const transcriptService = useRef(new TranscriptService());
   
   // API keys from environment variables
   const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY;
@@ -240,6 +242,27 @@ const VoiceChat = () => {
     toast(`Switched to ${agent === 'deepgram' ? 'Deepgram Nova 2' : 'WebSpeech API'}`);
   };
   
+  // Handle saving transcript
+  const handleSaveTranscript = async (transcriptContent: string, voiceAgent: VoiceAgent, model: LLMModel): Promise<void> => {
+    try {
+      const { data, error } = await transcriptService.current.saveTranscript({
+        content: transcriptContent,
+        voice_agent: voiceAgent,
+        model_used: model
+      });
+
+      if (error) {
+        throw new Error(error);
+      }
+
+      // Clear the transcript after successful save
+      setAccumulatedTranscript("");
+    } catch (error) {
+      console.error('Error saving transcript:', error);
+      throw error;
+    }
+  };
+  
   return (
     <div className="fixed inset-x-0 bottom-16 flex justify-center z-50">
       <div className="neo-blur rounded-xl border border-green-500 shadow-xl max-w-2xl w-full mx-4 transition-all duration-300 ease-in-out overflow-hidden color-changing-border">
@@ -317,6 +340,7 @@ const VoiceChat = () => {
               accumulatedTranscript={accumulatedTranscript}
               isThinking={isThinking} 
               onClear={clearTranscript}
+              onSave={handleSaveTranscript}
               show={true}
               selectedModel={selectedModel}
               selectedVoiceAgent={selectedVoiceAgent}
