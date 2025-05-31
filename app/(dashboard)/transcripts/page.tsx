@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { TranscriptService } from '@/lib/services/transcript-service';
 import { Transcript } from '@/lib/types/transcript';
 import { toast } from 'sonner';
-import { Trash2, Calendar, Mic, Brain } from 'lucide-react';
+import { Trash2, Calendar, Mic /*, Brain */ } from 'lucide-react';
 
 const TranscriptsPage = () => {
   const [transcripts, setTranscripts] = useState<Transcript[]>([]);
@@ -124,10 +124,10 @@ const TranscriptsPage = () => {
                       <span>{getVoiceAgentIcon(transcript.voice_agent)}</span>
                       {transcript.voice_agent === 'deepgram' ? 'Deepgram Nova 2' : 'WebSpeech'}
                     </div>
-                    <div className="flex items-center gap-1">
+                    {/* <div className="flex items-center gap-1">
                       <Brain className="h-4 w-4" />
                       {transcript.model_used}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
                 <button

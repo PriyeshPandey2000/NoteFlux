@@ -19,7 +19,11 @@ declare global {
 
 export type LLMModel = 'gpt-4o-mini' | 'gpt-4o' | 'gpt-4.5-preview';
 
-const VoiceChat = () => {
+interface VoiceChatProps {
+  onTranscriptSaved?: () => void;
+}
+
+const VoiceChat = ({ onTranscriptSaved }: VoiceChatProps = {}) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [isThinking, setIsThinking] = useState(false);
@@ -257,6 +261,9 @@ const VoiceChat = () => {
 
       // Clear the transcript after successful save
       setAccumulatedTranscript("");
+      if (onTranscriptSaved) {
+        onTranscriptSaved();
+      }
     } catch (error) {
       console.error('Error saving transcript:', error);
       throw error;
