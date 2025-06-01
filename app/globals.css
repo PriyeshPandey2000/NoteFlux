@@ -291,3 +291,329 @@ body {
     border-color: #22c55e; /* Back to light green */
   }
 }
+
+/* Tiptap Editor Dark Mode Styles */
+.tiptap-editor-dark .ProseMirror {
+  background: transparent;
+  color: #e5e7eb;
+  outline: none;
+  padding: 1rem;
+  min-height: 500px;
+}
+
+.tiptap-editor-dark .ProseMirror h1 {
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.tiptap-editor-dark .ProseMirror h2 {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.tiptap-editor-dark .ProseMirror h3 {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.tiptap-editor-dark .ProseMirror p {
+  color: #d1d5db;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.tiptap-editor-dark .ProseMirror strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.tiptap-editor-dark .ProseMirror em {
+  color: #f3f4f6;
+  font-style: italic;
+}
+
+.tiptap-editor-dark .ProseMirror ul,
+.tiptap-editor-dark .ProseMirror ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.tiptap-editor-dark .ProseMirror li {
+  color: #d1d5db;
+  margin-bottom: 0.25rem;
+}
+
+.tiptap-editor-dark .ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+}
+
+.tiptap-editor-dark .ProseMirror ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.tiptap-editor-dark .ProseMirror ul[data-type="taskList"] li input[type="checkbox"] {
+  margin-top: 0.25rem;
+  accent-color: #8b5cf6;
+}
+
+.tiptap-editor-dark .ProseMirror blockquote {
+  border-left: 4px solid #8b5cf6;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: #9ca3af;
+  font-style: italic;
+  background: rgba(139, 92, 246, 0.05);
+  border-radius: 0 0.375rem 0.375rem 0;
+}
+
+.tiptap-editor-dark .ProseMirror code {
+  background: rgba(75, 85, 99, 0.5);
+  color: #f9fafb;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  font-size: 0.875em;
+}
+
+.tiptap-editor-dark .ProseMirror pre {
+  background: rgba(31, 41, 55, 0.8);
+  color: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  border: 1px solid rgba(75, 85, 99, 0.3);
+}
+
+.tiptap-editor-dark .ProseMirror pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.tiptap-editor-dark .ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.tiptap-editor-dark .ProseMirror hr {
+  border: none;
+  border-top: 1px solid rgba(75, 85, 99, 0.5);
+  margin: 2rem 0;
+}
+
+/* Selection styles */
+.tiptap-editor-dark .ProseMirror ::selection {
+  background: rgba(139, 92, 246, 0.3);
+}
+
+/* Placeholder styles */
+.tiptap-editor-dark .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #6b7280;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Focus styles */
+.tiptap-editor-dark .ProseMirror:focus {
+  outline: none;
+}
+
+/* Text alignment */
+.tiptap-editor-dark .ProseMirror [data-text-align="left"] {
+  text-align: left;
+}
+
+.tiptap-editor-dark .ProseMirror [data-text-align="center"] {
+  text-align: center;
+}
+
+.tiptap-editor-dark .ProseMirror [data-text-align="right"] {
+  text-align: right;
+}
+
+.tiptap-editor-dark .ProseMirror [data-text-align="justify"] {
+  text-align: justify;
+}
+
+/* Tiptap Editor Light Mode Styles */
+.tiptap-editor-light .ProseMirror {
+  background: transparent;
+  color: #374151;
+  outline: none;
+  padding: 1rem;
+  min-height: 500px;
+}
+
+.tiptap-editor-light .ProseMirror h1 {
+  color: #111827;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.tiptap-editor-light .ProseMirror h2 {
+  color: #111827;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.tiptap-editor-light .ProseMirror h3 {
+  color: #111827;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.tiptap-editor-light .ProseMirror p {
+  color: #4b5563;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.tiptap-editor-light .ProseMirror strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+.tiptap-editor-light .ProseMirror em {
+  color: #374151;
+  font-style: italic;
+}
+
+.tiptap-editor-light .ProseMirror ul,
+.tiptap-editor-light .ProseMirror ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.tiptap-editor-light .ProseMirror li {
+  color: #4b5563;
+  margin-bottom: 0.25rem;
+}
+
+.tiptap-editor-light .ProseMirror ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+}
+
+.tiptap-editor-light .ProseMirror ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.tiptap-editor-light .ProseMirror ul[data-type="taskList"] li input[type="checkbox"] {
+  margin-top: 0.25rem;
+  accent-color: #8b5cf6;
+}
+
+.tiptap-editor-light .ProseMirror blockquote {
+  border-left: 4px solid #8b5cf6;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: #6b7280;
+  font-style: italic;
+  background: rgba(139, 92, 246, 0.05);
+  border-radius: 0 0.375rem 0.375rem 0;
+}
+
+.tiptap-editor-light .ProseMirror code {
+  background: rgba(229, 231, 235, 0.8);
+  color: #374151;
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  font-size: 0.875em;
+}
+
+.tiptap-editor-light .ProseMirror pre {
+  background: rgba(249, 250, 251, 0.9);
+  color: #374151;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1rem 0;
+  border: 1px solid rgba(209, 213, 219, 0.5);
+}
+
+.tiptap-editor-light .ProseMirror pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.tiptap-editor-light .ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.tiptap-editor-light .ProseMirror hr {
+  border: none;
+  border-top: 1px solid rgba(209, 213, 219, 0.5);
+  margin: 2rem 0;
+}
+
+/* Selection styles */
+.tiptap-editor-light .ProseMirror ::selection {
+  background: rgba(139, 92, 246, 0.2);
+}
+
+/* Placeholder styles */
+.tiptap-editor-light .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #9ca3af;
+  pointer-events: none;
+  height: 0;
+}
+
+/* Focus styles */
+.tiptap-editor-light .ProseMirror:focus {
+  outline: none;
+}
+
+/* Text alignment */
+.tiptap-editor-light .ProseMirror [data-text-align="left"] {
+  text-align: left;
+}
+
+.tiptap-editor-light .ProseMirror [data-text-align="center"] {
+  text-align: center;
+}
+
+.tiptap-editor-light .ProseMirror [data-text-align="right"] {
+  text-align: right;
+}
+
+.tiptap-editor-light .ProseMirror [data-text-align="justify"] {
+  text-align: justify;
+}

@@ -8,6 +8,7 @@ import { User } from '@supabase/supabase-js';
 import { MessageSquare, Trash2, Calendar, Mic /*, Brain */, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from './ui/button';
+import { useRouter } from 'next/navigation';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ const Sidebar = forwardRef<SidebarRef, SidebarProps>(({ isOpen, onToggle }, ref)
   const [user, setUser] = useState<User | null>(null);
   const transcriptService = new TranscriptService();
   const supabase = createClient();
+  const router = useRouter();
 
   useEffect(() => {
     checkUser();
@@ -169,7 +171,8 @@ const Sidebar = forwardRef<SidebarRef, SidebarProps>(({ isOpen, onToggle }, ref)
             transcripts.map((transcript) => (
               <div
                 key={transcript.id}
-                className="group bg-gray-900/30 hover:bg-gray-800/50 rounded-lg p-4 transition-all duration-200 border border-gray-800/30 hover:border-gray-700/50"
+                onClick={() => router.push(`/editor/${transcript.id}`)}
+                className="group bg-gray-900/30 hover:bg-gray-800/50 rounded-lg p-4 transition-all duration-200 border border-gray-800/30 hover:border-gray-700/50 cursor-pointer"
               >
                 {/* Header with title and date */}
                 <div className="flex items-start justify-between mb-2">
@@ -179,7 +182,10 @@ const Sidebar = forwardRef<SidebarRef, SidebarProps>(({ isOpen, onToggle }, ref)
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => deleteTranscript(transcript.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteTranscript(transcript.id);
+                    }}
                     className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-red-400 hover:bg-red-400/10 p-1 h-auto"
                   >
                     <Trash2 className="w-3 h-3" />
