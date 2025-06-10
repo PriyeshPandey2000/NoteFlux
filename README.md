@@ -3,7 +3,7 @@
 </a>
 
 <p align="center">
- Open source voice to text conversion for faster typing .
+ Open source voice to text conversion for faster typing and instant correction of transcript .
 </p>
 
 <p align="center">
