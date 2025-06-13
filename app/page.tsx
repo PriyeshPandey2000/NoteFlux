@@ -1,10 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Hero from "@/components/hero";
-import ConnectSupabaseSteps from "@/components/tutorial/connect-supabase-steps";
-import SignUpUserSteps from "@/components/tutorial/sign-up-user-steps";
-import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import VoiceChat from "@/components/voice-assistant/voice-chat";
 import Sidebar, { SidebarRef } from "@/components/sidebar";
 
