@@ -8,6 +8,9 @@ import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import VoiceChat from "@/components/voice-assistant/voice-chat";
 import Sidebar, { SidebarRef } from "@/components/sidebar";
 
+// Force dynamic rendering to avoid build-time environment variable issues
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const sidebarRef = useRef<SidebarRef>(null);
