@@ -5,6 +5,9 @@ import { redirect } from "next/navigation";
 import VoiceChat from "@/components/voice-assistant/voice-chat";
 import Link from "next/link";
 
+// Force dynamic rendering to avoid CSS prerendering issues
+export const dynamic = 'force-dynamic';
+
 export default async function ProtectedPage() {
   const supabase = await createClient();
 
