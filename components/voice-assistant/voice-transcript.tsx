@@ -170,7 +170,7 @@ const VoiceTranscript = ({
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
                   <h4 className="text-xs font-medium text-purple-400 uppercase tracking-wide">
-                    Corrected
+                    Processed
                   </h4>
                   {transcriptState.isProcessing && (
                     <Clock className="w-3 h-3 animate-spin text-purple-400 ml-2" />
@@ -180,7 +180,7 @@ const VoiceTranscript = ({
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(transcriptState.processedTranscript);
-                      toast.success('Corrected transcript copied to clipboard!');
+                      toast.success('Transcript copied to clipboard!');
                     }}
                     className="flex items-center gap-1 text-xs text-purple-400 hover:text-purple-300 transition-colors"
                   >

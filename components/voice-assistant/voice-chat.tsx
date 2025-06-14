@@ -349,14 +349,14 @@ const VoiceChat = ({ onTranscriptSaved }: VoiceChatProps = {}) => {
   };
 
   return (
-    <div className="fixed inset-x-0 bottom-16 flex justify-center z-50">
-      <div className="floating-container relative min-h-[500px] w-full max-w-2xl">
-        <div className="neo-blur rounded-xl border border-green-500 shadow-xl w-full mx-4 transition-all duration-300 ease-in-out overflow-hidden color-changing-border">
+    <div className="fixed inset-x-0 bottom-4 sm:bottom-16 flex justify-center z-50">
+      <div className="floating-container relative min-h-[400px] sm:min-h-[500px] w-full max-w-sm sm:max-w-2xl">
+        <div className="neo-blur rounded-xl border border-green-500 shadow-xl w-full mx-2 sm:mx-4 transition-all duration-300 ease-in-out overflow-hidden color-changing-border">
           <div className="flex flex-col">
             {/* Header with selectors */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-700/30">
-              <h3 className="text-sm text-bold font-medium text-gray-300">Noteflux</h3>
-              <div className="flex items-center gap-3">
+            <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-700/30">
+              <h3 className="text-sm font-medium text-gray-300">Noteflux</h3>
+              <div className="flex items-center gap-2 sm:gap-3">
                 <VoiceAgentSelector 
                   selectedAgent={selectedVoiceAgent}
                   onAgentChange={handleVoiceAgentChange}
@@ -369,35 +369,35 @@ const VoiceChat = ({ onTranscriptSaved }: VoiceChatProps = {}) => {
             </div>
             
             {/* Main content area */}
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               {/* Center mic button and visualization */}
-              <div className="flex flex-col items-center mb-6">
+              <div className="flex flex-col items-center mb-4 sm:mb-6">
                 {/* Mic button with pulsing effect */}
                 <button
                   onClick={toggleListening}
-                  className={`mic-button-pro ${isListening ? 'active' : ''} mb-6`}
+                  className={`mic-button-pro ${isListening ? 'active' : ''} mb-4 sm:mb-6`}
                   aria-label={isListening ? "Stop listening" : "Start listening"}
                   id="voice-mic-button"
                   name="voice-mic-button"
                 >
                   {isListening ? (
-                    <MicOff className="h-6 w-6 text-white" />
+                    <MicOff className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                   ) : (
-                    <Mic className="h-6 w-6 text-white" />
+                    <Mic className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                   )}
                 </button>
 
                 {/* Status text */}
-                <div className="text-sm text-gray-400 mb-4">
+                <div className="text-xs sm:text-sm text-gray-400 mb-3 sm:mb-4 text-center px-2">
                   {isListening ? (
-                    <div className="flex items-center">
+                    <div className="flex items-center justify-center">
                       <div className="pulse-ring mr-2"></div>
                       <span>
                         Listening with {selectedVoiceAgent === 'deepgram' ? 'Deepgram Nova 2' : 'WebSpeech'}...
                       </span>
                     </div>
                   ) : isThinking ? (
-                    <div className="flex items-center">
+                    <div className="flex items-center justify-center">
                       <span>Processing your input...</span>
                     </div>
                   ) : (
@@ -409,11 +409,11 @@ const VoiceChat = ({ onTranscriptSaved }: VoiceChatProps = {}) => {
                 
                 {/* Audio visualization - only show when listening */}
                 {isListening && (
-                  <div className="audio-visualizer mb-4 flex items-end justify-center h-12 space-x-1">
-                    {[...Array(16)].map((_, i) => (
+                  <div className="audio-visualizer mb-3 sm:mb-4 flex items-end justify-center h-8 sm:h-12 space-x-0.5 sm:space-x-1">
+                    {[...Array(12)].map((_, i) => (
                       <div 
                         key={i} 
-                        className={`w-1.5 rounded-full audio-bar ${
+                        className={`w-1 sm:w-1.5 rounded-full audio-bar ${
                           isIntelligentMode 
                             ? 'bg-purple-500/70' 
                             : selectedVoiceAgent === 'deepgram' 
@@ -422,7 +422,7 @@ const VoiceChat = ({ onTranscriptSaved }: VoiceChatProps = {}) => {
                         }`}
                         style={{ 
                           animationDelay: `${i * 0.05}s`,
-                          height: `${Math.random() * 30 + 3}px`
+                          height: `${Math.random() * 20 + 3}px`
                         }}
                       ></div>
                     ))}
