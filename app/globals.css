@@ -350,9 +350,19 @@ body {
   margin-bottom: 1rem;
 }
 
+/* Add specific list styles */
+.tiptap-editor-dark .ProseMirror ul {
+  list-style-type: disc;
+}
+
+.tiptap-editor-dark .ProseMirror ol {
+  list-style-type: decimal;
+}
+
 .tiptap-editor-dark .ProseMirror li {
   color: #d1d5db;
   margin-bottom: 0.25rem;
+  display: list-item;
 }
 
 .tiptap-editor-dark .ProseMirror ul[data-type="taskList"] {
@@ -513,9 +523,19 @@ body {
   margin-bottom: 1rem;
 }
 
+/* Add specific list styles */
+.tiptap-editor-light .ProseMirror ul {
+  list-style-type: disc;
+}
+
+.tiptap-editor-light .ProseMirror ol {
+  list-style-type: decimal;
+}
+
 .tiptap-editor-light .ProseMirror li {
   color: #4b5563;
   margin-bottom: 0.25rem;
+  display: list-item;
 }
 
 .tiptap-editor-light .ProseMirror ul[data-type="taskList"] {

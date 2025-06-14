@@ -20,12 +20,12 @@ const voiceAgents = [
   { 
     value: 'webspeech', 
     label: 'WebSpeech API', 
-    description: 'Browser built-in (Free)' 
+    // description: 'Browser built-in (Free)' 
   },
   { 
     value: 'deepgram', 
     label: 'Deepgram Nova 2', 
-    description: 'Advanced AI transcription' 
+    // description: 'Advanced AI transcription' 
   },
 ];
 
@@ -51,7 +51,7 @@ const VoiceAgentSelector = ({ selectedAgent, onAgentChange }: VoiceAgentSelector
             >
               <div className="flex flex-col">
                 <span>{agent.label}</span>
-                <span className="text-xs text-gray-400">{agent.description}</span>
+                {/* <span className="text-xs text-gray-400">{agent.description}</span> */}
               </div>
             </SelectItem>
           ))}
