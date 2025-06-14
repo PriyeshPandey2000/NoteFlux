@@ -9,7 +9,6 @@ export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
   const supabase = await createClient();
-  const origin = (await headers()).get("origin");
 
   if (!email || !password) {
     return encodedRedirect(
@@ -19,26 +18,40 @@ export const signUpAction = async (formData: FormData) => {
     );
   }
 
-  const { error } = await supabase.auth.signUp({
+  // First, try to sign up the user
+  const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
     email,
     password,
-    // Comment out email verification to allow direct signup
-    // options: {
-    //   emailRedirectTo: `${origin}/auth/callback`,
-    // },
+    options: {
+      emailRedirectTo: undefined, // Explicitly disable email verification
+    },
   });
 
-  if (error) {
-    console.error(error.code + " " + error.message);
-    return encodedRedirect("error", "/sign-up", error.message);
-  } else {
-    // Modified success message - no email verification needed
-    return encodedRedirect(
-      "success",
-      "/sign-up",
-      "Account created successfully! You can now sign in.",
-    );
+  if (signUpError) {
+    console.error(signUpError.code + " " + signUpError.message);
+    return encodedRedirect("error", "/sign-up", signUpError.message);
   }
+
+  // Immediately try to sign in the user (this works even if email confirmation is enabled)
+  const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (signInError) {
+    // If sign in fails, it might be due to email confirmation
+    if (signInError.message.includes("Email not confirmed")) {
+      return encodedRedirect(
+        "error",
+        "/sign-up",
+        "Account created but email confirmation is required. Please check your email or contact support.",
+      );
+    }
+    return encodedRedirect("error", "/sign-up", signInError.message);
+  }
+
+  // If we get here, the user is signed up and signed in successfully
+  return redirect("/");
 };
 
 export const signInAction = async (formData: FormData) => {
