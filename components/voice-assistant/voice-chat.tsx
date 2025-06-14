@@ -22,9 +22,10 @@ export type LLMModel = 'gpt-4o-mini' | 'gpt-4o' | 'gpt-4.5-preview';
 
 type VoiceChatProps = {
   onTranscriptSaved?: () => void;
+  onUsageUpdated?: () => void;
 };
 
-const VoiceChat = ({ onTranscriptSaved }: VoiceChatProps = {}) => {
+const VoiceChat = ({ onTranscriptSaved, onUsageUpdated }: VoiceChatProps = {}) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [isThinking, setIsThinking] = useState(false);
@@ -129,7 +130,15 @@ const VoiceChat = ({ onTranscriptSaved }: VoiceChatProps = {}) => {
           (error: any) => {
             console.error('Deepgram error:', error);
             setIsListening(false);
-            toast("Error with Deepgram transcription. Please try again.");
+            
+            // Check if it's a usage limit error
+            if (error.message && error.message.includes('Free Deepgram minutes used up')) {
+              toast("🎯 Free Deepgram minutes used up! ✅ WebSpeech API is still available (free). Switch to WebSpeech to continue.", {
+                duration: 6000,
+              });
+            } else {
+              toast("Error with Deepgram transcription. Please try again.");
+            }
           },
           () => {
             setIsListening(true);
@@ -138,6 +147,8 @@ const VoiceChat = ({ onTranscriptSaved }: VoiceChatProps = {}) => {
           () => {
             setIsListening(false);
             setIsThinking(false);
+            // Notify parent that usage data should be refreshed
+            onUsageUpdated?.();
           }
         );
       }
