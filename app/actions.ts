@@ -22,19 +22,21 @@ export const signUpAction = async (formData: FormData) => {
   const { error } = await supabase.auth.signUp({
     email,
     password,
-    options: {
-      emailRedirectTo: `${origin}/auth/callback`,
-    },
+    // Comment out email verification to allow direct signup
+    // options: {
+    //   emailRedirectTo: `${origin}/auth/callback`,
+    // },
   });
 
   if (error) {
     console.error(error.code + " " + error.message);
     return encodedRedirect("error", "/sign-up", error.message);
   } else {
+    // Modified success message - no email verification needed
     return encodedRedirect(
       "success",
       "/sign-up",
-      "Thanks for signing up! Please check your email for a verification link.",
+      "Account created successfully! You can now sign in.",
     );
   }
 };

@@ -17,10 +17,10 @@ export default function Home() {
     <main className="flex min-h-screen">
       <Sidebar ref={sidebarRef} isOpen={isSidebarOpen} onToggle={() => setSidebarOpen(!isSidebarOpen)} />
       <div className={`flex-1 flex flex-col items-center justify-center p-4 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-16'}`}>
-        <div className="text-center">
+        {/* <div className="text-center">
           <h1 className="text-5xl font-bold text-white mb-4">NoteFlux</h1>
           <p className="text-lg text-gray-400">Your AI-powered note-taking companion</p>
-        </div>
+        </div> */}
         
         <DynamicVoiceChat />
 
