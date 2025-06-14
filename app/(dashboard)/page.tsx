@@ -1,32 +1,30 @@
-import FetchDataSteps from "@/components/tutorial/fetch-data-steps";
-import { createClient } from "@/utils/supabase/server";
-import { InfoIcon } from "lucide-react";
-import { redirect } from "next/navigation";
-import VoiceChat from "@/components/voice-assistant/voice-chat";
-import Link from "next/link";
+"use client";
 
-// Force dynamic rendering to avoid CSS prerendering issues
-export const dynamic = 'force-dynamic';
+import { useRef, useState } from "react";
+import dynamic from 'next/dynamic';
+import Sidebar, { SidebarRef } from "@/components/sidebar";
 
-export default async function ProtectedPage() {
-  const supabase = await createClient();
+const DynamicVoiceChat = dynamic(() => import('@/components/voice-assistant/voice-chat'), {
+  ssr: false,
+  loading: () => <div className="h-screen w-full flex items-center justify-center">Loading...</div>,
+});
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return redirect("/sign-in");
-  }
+export default function Home() {
+  const sidebarRef = useRef<SidebarRef>(null);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen w-full">
-      {/* Voice Chat Component */}
-      <div className="fixed inset-x-0 bottom-16 flex justify-center z-50">
-        <div className="floating-container relative min-h-[500px] w-full max-w-2xl">
-          <VoiceChat />
+    <main className="flex min-h-screen">
+      <Sidebar ref={sidebarRef} isOpen={isSidebarOpen} onToggle={() => setSidebarOpen(!isSidebarOpen)} />
+      <div className={`flex-1 flex flex-col items-center justify-center p-4 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-16'}`}>
+        <div className="text-center">
+          <h1 className="text-5xl font-bold text-white mb-4">NoteFlux</h1>
+          <p className="text-lg text-gray-400">Your AI-powered note-taking companion</p>
         </div>
+        
+        <DynamicVoiceChat />
+
       </div>
-    </div>
+    </main>
   );
 }
