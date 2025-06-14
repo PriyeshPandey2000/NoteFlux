@@ -1,37 +1,30 @@
 "use client";
 
-import { useState, useRef } from "react";
-import VoiceChat from "@/components/voice-assistant/voice-chat";
+import { useRef, useState } from "react";
+import dynamic from 'next/dynamic';
 import Sidebar, { SidebarRef } from "@/components/sidebar";
 
-// Force dynamic rendering to avoid build-time environment variable issues
-export const dynamic = 'force-dynamic';
+const DynamicVoiceChat = dynamic(() => import('@/components/voice-assistant/voice-chat'), {
+  ssr: false,
+  loading: () => <div className="h-screen w-full flex items-center justify-center">Loading...</div>,
+});
 
 export default function Home() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const sidebarRef = useRef<SidebarRef>(null);
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
-
-  const handleTranscriptSaved = () => {
-    // Refresh the sidebar when a new transcript is saved
-    if (sidebarRef.current) {
-      sidebarRef.current.refreshTranscripts();
-    }
-  };
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <>
-      <Sidebar ref={sidebarRef} isOpen={sidebarOpen} onToggle={toggleSidebar} />
-      <div className={`min-h-screen w-full flex items-center justify-center transition-all duration-300 ${
-        sidebarOpen ? 'lg:ml-96' : ''
-      }`}>
-        <div className="floating-container relative min-h-[500px] w-full max-w-2xl">
-          <VoiceChat onTranscriptSaved={handleTranscriptSaved} />
+    <main className="flex min-h-screen">
+      <Sidebar ref={sidebarRef} isOpen={isSidebarOpen} onToggle={() => setSidebarOpen(!isSidebarOpen)} />
+      <div className={`flex-1 flex flex-col items-center justify-center p-4 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-16'}`}>
+        <div className="text-center">
+          <h1 className="text-5xl font-bold text-white mb-4">NoteFlux</h1>
+          <p className="text-lg text-gray-400">Your AI-powered note-taking companion</p>
         </div>
+        
+        <DynamicVoiceChat />
+
       </div>
-    </>
+    </main>
   );
 }
